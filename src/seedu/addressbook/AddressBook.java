@@ -419,15 +419,14 @@ public class AddressBook {
         // try decoding a person from the raw args
         final Optional<String[]> decodeResult = decodePersonFromString(commandArgs);
 
-        // checks if args are valid (decode result will not be present if the person is invalid)
-        if (!decodeResult.isPresent()) {
-            return getMessageForInvalidCommandInput(COMMAND_ADD_WORD, getUsageInfoForAddCommand());
+        // checks if args are valid (decode result will be present if the person is valid)
+        if (decodeResult.isPresent()) {
+            // add the person as specified
+            final String[] personToAdd = decodeResult.get();
+            addPersonToAddressBook(personToAdd);
+            return getMessageForSuccessfulAddPerson(personToAdd);
         }
-
-        // add the person as specified
-        final String[] personToAdd = decodeResult.get();
-        addPersonToAddressBook(personToAdd);
-        return getMessageForSuccessfulAddPerson(personToAdd);
+        return getMessageForInvalidCommandInput(COMMAND_ADD_WORD, getUsageInfoForAddCommand());
     }
 
     /**
